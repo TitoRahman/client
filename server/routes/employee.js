@@ -1,8 +1,16 @@
 const router = require('express').Router()
 const Employee = require('../models/employee.model')
 
-
-router.post('/AddEmployee', async (req, res) => {
+// GET /api/employees - untuk menampilkan semua employee
+	
+// GET /api/employees/:id - untuk menampilkan employee by id
+	
+// POST /api/employees/add - untuk menambah employee baru
+	
+// PATCH /api/employees/:id - update employee by id
+	
+// DELETE /api/employees/:id - hapus employee by id
+router.post('/employee/add', async (req, res) => {
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
     const Email = req.body.Email;
@@ -25,7 +33,7 @@ router.post('/AddEmployee', async (req, res) => {
     }
 });
 
-router.get('/viewAllEmployee', async (req, res) => {
+router.get('/employees', async (req, res) => {
     Employee.find({}, (err, data) => {
         if (err) {
             res.send(err);
@@ -34,16 +42,14 @@ router.get('/viewAllEmployee', async (req, res) => {
     });
 });
 
-router.get('/viewSingleEmployee/:id', async (req, res) => {
-    const id = req.params.id;
-    Employee.find({
-        id
-    }, (err, data) => {
-        if (err) {
-            res.send(err);
-        }
-        res.send(data);
-    });
+router.get('/employees/:id', async (req, res) => {
+    try {
+        const data = await Employee.findById(req.params.id)
+        res.send(data)
+    }
+    catch (err){
+        res.status(500).send({message:err.message})
+    }
 });
 
 module.exports = router
